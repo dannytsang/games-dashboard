@@ -25,12 +25,13 @@ This spec is the umbrella MVP contract. Detailed child specs will own authentica
 
 ## Relationship to implementation specs
 
-- Authentication/protected shell: TBD (`003-…`)
-- Logged-in user shell and account menu: TBD (`004-…`, `005-…`)
-- Responsive layout: TBD (`006-…`)
-- Played games view: this spec (`001` FR-007)
-- News monitor view: this spec (`001` FR-008)
 - **News monitor producer:** `002-games-news-monitor-producer` (Final target — implements the producer side of FR-007 / FR-008 on top of the existing `gaming-news` skill).
+- **Data architecture & storage:** `003-data-architecture-storage` (Draft — storage target, path conventions, env-var registry, sanitisation rules).
+- **OIDC authentication:** `004-oidc-authentication` (Draft — Authentik via NextAuth.js, middleware, session shape, public/private boundary).
+- **Logged user & menu:** `005-logged-user-and-menu` (Draft — server-rendered user chip, click-to-open dropdown menu with theme toggle + sign out).
+- **Light/dark theme:** `006-light-dark-theme` (Draft — two-state theme, no-FOUC SSR, CSS tokens, localStorage persistence).
+- Played games view: this spec (`001` FR-007).
+- News monitor view: this spec (`001` FR-008).
 
 ## Goals
 
@@ -202,7 +203,10 @@ The Summary page exposes:
 | **Eligibility thresholds** | Defaults `playedRecentDays=30`, `launchWindowDays=90` from this spec. The producer's actual gate is the existing `_determine_news_eligibility` decision in `gaming-news` — those two threshold values are recorded in the snapshot for traceability but the runtime decision is made upstream. |
 | **Eligibility rule** | Reuse the upstream rule: `forced-include` / `always-track` / `score ≥ min_score` ⇒ `eligible`. Everything else ⇒ `not_eligible` (or `borderline` for missing `app_id`, `unknown` on stale snapshot). See `002-games-news-monitor-producer/spec.md` FR-003 for the mapping table. |
 | **Manual opt-in source-of-truth** | `games.yaml` `always_include_for_news` list and `tracking_mode: always` — already in place. No new artefact required. |
-| **Auth provider** | TBD (deferred to child spec `003-…`); Authentik/OIDC is the leading candidate based on `coms-dashboard`. |
+| **Auth provider** | Authentik via NextAuth.js. See `004-oidc-authentication`. |
+| **User menu** | Server-rendered chip + click-to-open menu (theme + sign out, no debug row). See `005-logged-user-and-menu`. |
+| **Theme system** | Two-state (`dark`, `light`) with no-FOUC SSR and localStorage persistence under `'games-dashboard-theme'`. See `006-light-dark-theme`. |
+| **Data architecture** | Vercel Blob, path `games-dashboard/v1/{leaf}/latest.json`, three server-side env vars. See `003-data-architecture-storage`. |
 | **Historical retention** | Defer. MVP keeps only the latest snapshot per source. |
 | **Drift remediation policy** | Surface only, read-only, no auto-remediation. The dashboard shows the `eligibilityDrift` warning; nothing else acts on it. |
 | **Eligibility thresholds are server-side only** | They are NOT `NEXT_PUBLIC_*`. |
