@@ -1,0 +1,51 @@
+# Build and lint evidence — FR-000 placeholder
+
+## Commands run
+
+### npm run build
+```
+> games-dashboard@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.15
+  Creating an optimized production build ...
+  ✓ Compiled successfully
+  Linting and checking validity of types ...
+  Collecting page data ...
+  Generating static pages (0/4) ...
+  Generating static pages (1/4)
+  Generating static pages (2/4)
+  Generating static pages (3/4)
+  ✓ Generating static pages (4/4)
+  Finalizing page optimization ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    138 B          87.2 kB
+└ ○ /_not-found                          873 B            88 kB
++ First Load JS shared by all            87.1 kB
+
+Exit code: 0
+```
+
+### npm run lint
+```
+> games-dashboard@0.1.0 lint
+> next lint
+
+✔ No ESLint warnings or errors
+Exit code: 0
+```
+
+### npm run type-check
+```
+> games-dashboard@0.1.0 type-check
+> tsc --noEmit
+Exit code: 0
+```
+
+## Notes
+- Package manager: npm
+- Next.js: 14.2.15 (React 18.3.1, TypeScript 5.4.5)
+- .eslintrc.json added with "next/core-web-vitals" to avoid interactive ESLint setup prompt
+- Only one route: `/` (placeholder landing page)
+- No NEXT_PUBLIC_* vars, no secrets, no real data
