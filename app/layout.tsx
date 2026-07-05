@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import Nav from './components/Nav';
 
 export const metadata: Metadata = {
   title: 'Games Dashboard',
-  description: 'Private games dashboard — placeholder',
+  description: 'Private games dashboard',
 };
 
 export default function RootLayout({
@@ -13,7 +14,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <div className="layout">
+          <Nav />
+          <main className="site-main">{children}</main>
+        </div>
+      </body>
     </html>
   );
 }

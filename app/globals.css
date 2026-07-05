@@ -8,4 +8,348 @@ body {
   background: #fafafa;
   color: #111;
   line-height: 1.6;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+   Layout
+   -------------------------------------------------------------------------- */
+
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-header {
+  background: #1a1a2e;
+  color: #fff;
+  padding: 0 1.5rem;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  height: 3.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.nav-link {
+  color: #a0a0b0;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.nav-link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-link--home {
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.nav-link--active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.nav-links {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.site-main {
+  flex: 1;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Page header
+   -------------------------------------------------------------------------- */
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #111;
+}
+
+.page-subtitle {
+  color: #666;
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   Banner (fixture warning)
+   -------------------------------------------------------------------------- */
+
+.banner {
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.banner--warning {
+  background: #fffbeb;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.banner--error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.banner--info {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+/* --------------------------------------------------------------------------
+   Summary counts (/)
+   -------------------------------------------------------------------------- */
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+}
+
+.summary-card__label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.summary-card__value {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #111;
+  line-height: 1;
+}
+
+.quick-links {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.quick-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: #1a1a2e;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: background 0.15s;
+}
+
+.quick-link:hover {
+  background: #2d2d4a;
+}
+
+/* --------------------------------------------------------------------------
+   Game rows (/played, /news-monitor)
+   -------------------------------------------------------------------------- */
+
+.game-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.game-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.game-card__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.game-card__meta {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-top: 0.2rem;
+}
+
+.game-card__context {
+  font-size: 0.85rem;
+  color: #374151;
+  margin-top: 0.25rem;
+}
+
+.game-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.chip {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.chip--eligible    { background: #dcfce7; color: #166534; }
+.chip--borderline { background: #fef9c3; color: #854d0e; }
+.chip--not-eligible { background: #fee2e2; color: #991b1b; }
+.chip--unknown    { background: #f3f4f6; color: #374151; }
+.chip--reason     { background: #eff6ff; color: #1e40af; }
+
+/* --------------------------------------------------------------------------
+   Verdict badge
+   -------------------------------------------------------------------------- */
+
+.verdict-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.verdict-badge--eligible     { background: #dcfce7; color: #166534; }
+.verdict-badge--borderline  { background: #fef9c3; color: #854d0e; }
+.verdict-badge--not-eligible { background: #fee2e2; color: #991b1b; }
+.verdict-badge--unknown     { background: #f3f4f6; color: #374151; }
+
+/* --------------------------------------------------------------------------
+   Drift warning
+   -------------------------------------------------------------------------- */
+
+.drift-warning {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  color: #9a3412;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Source label
+   -------------------------------------------------------------------------- */
+
+.source-label {
+  display: inline-block;
+  padding: 0.15rem 0.45rem;
+  background: #f3f4f6;
+  color: #374151;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* --------------------------------------------------------------------------
+   Trigger metrics
+   -------------------------------------------------------------------------- */
+
+.trigger-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.trigger-pill {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+/* --------------------------------------------------------------------------
+   No data / error state
+   -------------------------------------------------------------------------- */
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6b7280;
+}
+
+.empty-state__icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.empty-state__body {
+  font-size: 0.9rem;
+}
+
+/* --------------------------------------------------------------------------
+   Unknown reason
+   -------------------------------------------------------------------------- */
+
+.unknown-reason {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  font-style: italic;
+  margin-top: 0.25rem;
 }
