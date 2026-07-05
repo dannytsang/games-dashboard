@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "news-monitor/v1",
+  "generatedAt": "2026-07-05T12:00:00.000Z",
+  "items": [
+    {
+      "id": "nm-001",
+      "source": "steam",
+      "title": "Stellar Odyssey",
+      "status": "completed",
+      "reasons": ["recent_activity", "recent_launch"],
+      "triggers": {
+        "lastPlayedAt": "2026-07-01T18:30:00.000Z",
+        "releaseDate": "2026-03-15T00:00:00.000Z"
+      },
+      "addedAt": "2026-06-15T08:00:00.000Z",
+      "playedGameId": "pg-001"
+    },
+    {
+      "id": "nm-002",
+      "source": "steam",
+      "title": "Iron Cove",
+      "status": "playing",
+      "reasons": ["recent_activity"],
+      "triggers": {
+        "lastPlayedAt": "2026-06-20T09:15:00.000Z"
+      },
+      "addedAt": "2026-06-21T08:00:00.000Z",
+      "playedGameId": "pg-002"
+    },
+    {
+      "id": "nm-003",
+      "source": "psn",
+      "title": "Neon Drivers",
+      "status": "playing",
+      "reasons": ["recent_launch"],
+      "triggers": {
+        "releaseDate": "2026-01-20T00:00:00.000Z"
+      },
+      "addedAt": "2026-06-25T08:00:00.000Z",
+      "playedGameId": "pg-003"
+    },
+    {
+      "id": "nm-004",
+      "source": "steam",
+      "title": "Arcade Classic Vol. 3",
+      "status": "playing",
+      "reasons": ["recent_activity"],
+      "triggers": {
+        "lastPlayedAt": "2026-06-30T11:00:00.000Z"
+      },
+      "addedAt": "2026-07-01T08:00:00.000Z",
+      "playedGameId": "pg-006",
+      "eligibilityDrift": {
+        "currentVerdict": "borderline",
+        "notedAt": "2026-07-04T12:00:00.000Z"
+      }
+    },
+    {
+      "id": "nm-005",
+      "source": "backloggd",
+      "title": "Wilderness Survival",
+      "status": "backlog",
+      "reasons": ["manual_opt_in"],
+      "triggers": {
+        "optedInAt": "2026-06-01T00:00:00.000Z"
+      },
+      "addedAt": "2026-06-01T08:00:00.000Z",
+      "playedGameId": "pg-007"
+    },
+    {
+      "id": "nm-006",
+      "source": "psn",
+      "title": "Fantasy Quest XI",
+      "status": "completed",
+      "reasons": ["recent_activity", "recent_launch"],
+      "triggers": {
+        "lastPlayedAt": "2026-07-02T20:00:00.000Z",
+        "releaseDate": "2026-06-20T00:00:00.000Z"
+      },
+      "addedAt": "2026-07-03T08:00:00.000Z",
+      "playedGameId": "pg-009"
+    },
+    {
+      "id": "nm-007",
+      "source": "steam",
+      "title": "Mystery Dungeon",
+      "status": "backlog",
+      "reasons": [],
+      "triggers": {},
+      "addedAt": "2026-06-10T08:00:00.000Z"
+    }
+  ],
+  "summary": {
+    "total": 7,
+    "bySource": {
+      "steam": 3,
+      "psn": 2,
+      "backloggd": 1,
+      "manual": 1
+    },
+    "byReason": {
+      "recent_activity": 3,
+      "recent_launch": 2,
+      "manual_opt_in": 1
+    },
+    "withDrift": 1
+  }
+}
