@@ -35,7 +35,8 @@ The data-plane contract is spec 003.
 3. Persistence in `localStorage` under a dashboard-scoped key.
 4. Toggle available on the sign-in page (pre-auth) and in the user menu (post-auth).
 5. Theme tokens exposed as CSS custom properties.
-6. Privacy: no theme value in the client URL, no theme in the snapshot data.
+6. First-time visitors respect `prefers-color-scheme` when available, with a sensible fallback when it is not.
+7. Privacy: no theme value in the client URL, no theme in the snapshot data.
 
 ## Non-goals
 
@@ -59,19 +60,21 @@ The data-plane contract is spec 003.
 
 ## Functional requirements
 
-### FR-001 Two states: dark (default), light
+### FR-001 Two states: dark, light
 
-The two states are `'dark'` and `'light'`. Default is `'dark'` — the
-server-rendered HTML carries `data-theme="dark"` on `<html>` so there is
-no FOUC for first-time visitors.
+The two states are `'dark'` and `'light'`. First-time visitors follow
+`prefers-color-scheme` when it is available; if it is unavailable, the
+server falls back to `'dark'`. This preserves a deterministic SSR
+baseline while still respecting the browser preference when present.
 
 ### FR-002 No-FOUC SSR contract
 
-The server-rendered HTML MUST carry `data-theme="dark"` on `<html>` for
-first-time visitors (no localStorage on the server). After hydration,
-the `ThemeProvider` reads localStorage and, if a value is present,
-updates `<html data-theme>` to match. If localStorage has no value, the
-default `'dark'` stays.
+The server-rendered HTML MUST carry a deterministic `data-theme`
+attribute on `<html>` for first-time visitors (no localStorage on the
+server). After hydration, the `ThemeProvider` reads localStorage and, if
+a value is present, updates `<html data-theme>` to match. If localStorage
+has no value, the provider uses the browser preference when available,
+otherwise the default `'dark'`.
 
 ### FR-003 Persistence
 
@@ -211,10 +214,10 @@ the same trade-off as `meals-dashboard`.
 
 | Question | Decision |
 |---|---|
-| States | `'dark'` (default), `'light'`. No system-preference auto-detect. |
+| States | `'dark'` and `'light'`. First-time visitors respect `prefers-color-scheme` when available. |
 | Persistence | `localStorage` under `'games-dashboard-theme'`. |
-| Default theme | `'dark'` for first-time visitors. |
-| No-FOUC mechanism | Server renders `data-theme="dark"`; client hydrates and updates if needed. |
+| Default theme | `'dark'` fallback when browser preference is unavailable. |
+| No-FOUC mechanism | Server renders a deterministic `data-theme`; client hydrates and updates if needed. |
 | Token system | CSS custom properties on `:root[data-theme=...]`. |
 | Icon contract | Sun in dark mode, Moon in light mode. |
 | Toggle surface | Sign-in page (spec 004) and user menu (spec 005). |
