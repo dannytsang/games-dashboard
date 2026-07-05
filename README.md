@@ -13,10 +13,14 @@ The pattern mirrors `coms-dashboard` (umbrella MVP `001` plus child specs `002+`
 | Surface | Path / ID | Visibility | Purpose |
 |---|---|---|---|
 | Implementation repo | `git@github.com:dannytsang/games-dashboard.git` | Public GitHub | Next.js app code only |
-| SDD workspace | `~/.hermes/workspace/games-dashboard-sdd` | Private local workspace | Requirements, specs, evidence |
+| SDD workspace | `specs/` (this repo) | Public templates + Proposed specs | Requirements, specs, evidence |
+| Private SDD workspace | _TBD — see `specs/001-games-dashboard/tasks.md`_ | Private local | Reserved for when product content firms up |
+| Producer (server-side) | `~/.hermes/profiles/home/skills/gaming-news/scripts/publish_dashboard_snapshots.py` | Private | Spec 002 — publishes `played/latest.json` and `news-monitor/latest.json` |
+| Upstream producer skill | `~/.hermes/profiles/home/skills/gaming-news/` | Private | Existing skill; the spec-002 producer is a thin adapter on top of it |
 | Vercel project | _TBD — link not yet recorded_ | Vercel | Deployment target |
+| Vercel Blob | _TBD — `games-dashboard/v1/*` paths_ | Vercel | Runtime store for the two dashboard snapshots |
 
-> The Vercel project ID and `BLOB_STORE`/`BLOB_READ_WRITE_TOKEN` values are intentionally **not** recorded here. They live in the private SDD workspace and in Vercel environment variables only.
+> The Vercel project ID, `GAMES_DASHBOARD_DATA_SECRET`, `BLOB_READ_WRITE_TOKEN`, and `GAMES_DASHBOARD_BLOB_STORE_ID` values are intentionally **not** recorded here. They live in the private producer environment and in Vercel environment variables only.
 
 ## Operating model
 
@@ -37,18 +41,13 @@ The public repo **must not** include the private SDD workspace or any raw/privat
 
 ## SDD scaffolding in this repo
 
-The `specs/` directory holds **reusable spec templates only** (the `specs/_template-*.md` files). Each new feature creates a `specs/NNN-{slug}/` directory under the private SDD workspace, not here.
+The `specs/` directory holds the **Proposed umbrella spec** and the **producer spec** (Proposed), plus reusable spec templates. Each new feature creates a `specs/NNN-{slug}/` directory in this repo (or in the private SDD workspace once it exists).
 
-| File | Purpose |
+| Path | Purpose |
 |---|---|
-| `specs/_template-spec.md` | Spec contract skeleton |
-| `specs/_template-acceptance-criteria.md` | Testable acceptance checklist |
-| `specs/_template-data-contracts.md` | Schemas, paths, sanitisation rules |
-| `specs/_template-security-privacy.md` | Privacy boundary and verification |
-| `specs/_template-plan.md` | Phased implementation approach |
-| `specs/_template-tasks.md` | Task list with status |
-| `specs/_template-open-questions.md` | Open questions tracker |
-| `specs/_template-changelog.md` | Per-spec changelog |
+| `specs/001-games-dashboard/` | Umbrella MVP — three top-level pages (`/`, `/played`, `/news-monitor`), eligibility model, drift surfacing. Final target. |
+| `specs/002-games-news-monitor-producer/` | Server-side producer adapter on top of the existing `gaming-news` skill. Publishes the two dashboard snapshots. Final target. |
+| `specs/_template-*.md` | Reusable spec templates |
 | `decisions/` | Architecture decision records (ADRs) |
 | `evidence/` | Tester evidence, build logs, privacy scans |
 | `sanitized-examples/` | Fictional fixtures safe to commit |

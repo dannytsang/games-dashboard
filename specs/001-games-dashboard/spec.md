@@ -25,14 +25,12 @@ This spec is the umbrella MVP contract. Detailed child specs will own authentica
 
 ## Relationship to implementation specs
 
-- Authentication/protected shell: TBD (`002-…`)
-- Logged-in user shell and account menu: TBD (`003-…`, `004-…`)
-- Responsive layout: TBD (`005-…`)
+- Authentication/protected shell: TBD (`003-…`)
+- Logged-in user shell and account menu: TBD (`004-…`, `005-…`)
+- Responsive layout: TBD (`006-…`)
 - Played games view: this spec (`001` FR-007)
 - News monitor view: this spec (`001` FR-008)
-- Source-separated runtime storage: TBD (Blob or alternative)
-- Common source-sync architecture: TBD
-- Source-specific publishers: TBD (one per source)
+- **News monitor producer:** `002-games-news-monitor-producer` (Final target — implements the producer side of FR-007 / FR-008 on top of the existing `gaming-news` skill).
 
 ## Goals
 
@@ -193,18 +191,24 @@ The Summary page exposes:
 - Verification must include lint/build/tests plus privacy checks for accidental fixture/secret leakage.
 - Eligibility computation must happen server-side; client only receives the precomputed verdict + reasons array.
 
-## Open questions
+## Resolved design decisions (2026-07-05 unblock)
 
-See `open-questions.md`. Key ones for this refinement:
+| Question | Decision |
+|---|---|
+| **News sources** | Steam as default (matches `gaming-news` spec 004). RSS / patch-note sources remain future extensions; the dashboard does not block on them. |
+| **Delivery channel for news items** | Out of scope for the dashboard. The existing `gaming-news/scripts/cron_daily_news.py` (Telegram) and `weekly_digest.py` continue to own delivery. The dashboard is read-only consumption. |
+| **Producer location** | `~/.hermes/profiles/home/skills/gaming-news/scripts/publish_dashboard_snapshots.py`. This is a thin adapter that calls the existing `build_game_catalog(days=N)` and `_determine_news_eligibility`. The upstream skill is not modified. |
+| **Storage target** | Vercel Blob, same store as `coms-dashboard`. Producer auth: `GAMES_DASHBOARD_DATA_SECRET` (mirrors `COMS_DASHBOARD_DATA_SECRET` pattern). |
+| **Eligibility thresholds** | Defaults `playedRecentDays=30`, `launchWindowDays=90` from this spec. The producer's actual gate is the existing `_determine_news_eligibility` decision in `gaming-news` — those two threshold values are recorded in the snapshot for traceability but the runtime decision is made upstream. |
+| **Eligibility rule** | Reuse the upstream rule: `forced-include` / `always-track` / `score ≥ min_score` ⇒ `eligible`. Everything else ⇒ `not_eligible` (or `borderline` for missing `app_id`, `unknown` on stale snapshot). See `002-games-news-monitor-producer/spec.md` FR-003 for the mapping table. |
+| **Manual opt-in source-of-truth** | `games.yaml` `always_include_for_news` list and `tracking_mode: always` — already in place. No new artefact required. |
+| **Auth provider** | TBD (deferred to child spec `003-…`); Authentik/OIDC is the leading candidate based on `coms-dashboard`. |
+| **Historical retention** | Defer. MVP keeps only the latest snapshot per source. |
+| **Drift remediation policy** | Surface only, read-only, no auto-remediation. The dashboard shows the `eligibilityDrift` warning; nothing else acts on it. |
+| **Eligibility thresholds are server-side only** | They are NOT `NEXT_PUBLIC_*`. |
+| **Eligibility computation happens server-side** | The dashboard receives the precomputed `verdict` + `reasons` from the producer; it never recomputes. |
 
-1. Is the **combined rule** (recent activity OR recent launch OR manual opt-in) the correct eligibility logic, or should one of the three be the sole trigger?
-2. Are the **default thresholds** (`PLAYED_RECENT_DAYS=30`, `LAUNCH_WINDOW_DAYS=90`) right, or do you want a different cut-off?
-3. **News sources** for the monitor feed — IGDB, Steam News, RSS feeds, Backloggd, manual entries, or a mix?
-4. **Delivery channel** for news items — Telegram, WhatsApp, Email, or dashboard-only?
-5. **Producer location** — where does the `played` / `news-monitor` snapshot live? A Hermes skill on the `home` profile, an external cron, or a manual script?
-6. **Storage target** — Vercel Blob (mirror coms-dashboard) or something else?
-
-## Acceptance criteria
+## Remaining open questions
 
 See `acceptance-criteria.md`.
 

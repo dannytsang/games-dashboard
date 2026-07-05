@@ -1,31 +1,26 @@
 # Open Questions
 
-## Resolved by 2026-07-05 spec refinement
+> **Note:** As of 2026-07-05, most of the original open questions are resolved — see `spec.md` § "Resolved design decisions" for the full table. This file is kept for traceability of what was decided and why.
 
-1. ~~What exactly does each dashboard page show?~~ → Resolved: `/`, `/played`, `/news-monitor`. `/played` per FR-007, `/news-monitor` per FR-008, `/` per FR-009.
-2. ~~Should resolved / shelved / replay games appear in MVP, or only active / backlog?~~ → Resolved: any played game appears on `/played` with a per-row eligibility verdict. `GameStatus` values still cover backlog / playing / completed / shelved / replay / wishlist / unknown.
-3. ~~Should the first UI include trend / count summaries, or just the backlog list?~~ → Resolved: Summary (`/`) exposes counts only; per-page lists live on `/played` and `/news-monitor`.
-4. ~~Which pages should the dashboard expose?~~ → Resolved: three top-level pages — `/`, `/played`, `/news-monitor`.
+## Resolved by 2026-07-05 unblock
 
-## Outstanding
+| Question | Decision | Where decided |
+|---|---|---|
+| Which dashboard pages? | `/`, `/played`, `/news-monitor` | spec 001 (refinement) |
+| Which news sources for the monitor? | Steam (default); RSS / patch-note future extensions | spec 001 (unblock) + spec 004 of `gaming-news` |
+| Delivery channel for news items | Out of dashboard scope; existing `cron_daily_news.py` (Telegram) + `weekly_digest.py` continue to own it | spec 001 (unblock) |
+| Producer location | `~/.hermes/profiles/home/skills/gaming-news/scripts/publish_dashboard_snapshots.py` (thin adapter on top of existing skill) | spec 001 (unblock) + spec 002 |
+| Storage target | Vercel Blob, same store as `coms-dashboard`, auth via `GAMES_DASHBOARD_DATA_SECRET` | spec 001 (unblock) + spec 002 |
+| Eligibility rule | Reuse upstream `_determine_news_eligibility`; see FR-003 mapping table in spec 002 | spec 002 |
+| Eligibility thresholds | `playedRecentDays=30`, `launchWindowDays=90`; recorded in snapshot for traceability | spec 001 (refinement) |
+| Manual opt-in source-of-truth | `games.yaml` `always_include_for_news` and `tracking_mode: always` (already in place) | spec 001 (unblock) |
+| Drift remediation policy | Surface only, read-only | spec 001 (refinement) |
+| Should resolved/shelved/replay games appear on `/played`? | Yes — every played game appears with a verdict | spec 001 (refinement) |
+| Should `/` include trend/count summaries or just lists? | Counts only on `/`; lists on `/played` and `/news-monitor` | spec 001 (refinement) |
 
-1. **News sources** for the monitor feed. Likely candidates:
-   - IGDB (game metadata + release dates)
-   - Steam News API (per-game news)
-   - RSS feeds (e.g. official publisher feeds)
-   - Backloggd (community updates)
-   - Manual entries (Danny-curated allow-list)
-   What is the source mix? Is there already a producer in place somewhere?
-2. **Delivery channel** for news items — Telegram, WhatsApp, Email, RSS, dashboard-only?
-3. **Producer location** for `played/latest.json` and `news-monitor/latest.json`:
-   - A Hermes skill on the `home` profile?
-   - An external cron / GitHub Action?
-   - A manual script Danny runs?
-   - A combination (per-source producers + an aggregator)?
-4. **Storage target** — Vercel Blob (mirror coms-dashboard), Vercel KV, a local SQLite synced to a private bucket, or something else?
-5. **Eligibility thresholds** — defaults of `PLAYED_RECENT_DAYS=30` and `LAUNCH_WINDOW_DAYS=90` are written into the spec. Override?
-6. **Eligibility rule** — combined (any of three reasons qualifies) vs. stricter (require recent activity AND recent launch, etc.). Override?
-7. **Manual opt-in source-of-truth** — a YAML/JSON file in the private Hermes workspace, a Todoist task, a Notion DB, or a Vercel Blob allow-list object?
-8. **What auth provider should protect production?** Authentik/OIDC (mirror coms-dashboard) or alternative?
-9. **Historical retention** — should we keep dated snapshots, and for how long?
-10. **Drift remediation policy** — when a news-monitor entry's eligibility drifts, do we surface only, or also produce a TODO/notification?
+## Live open questions (still need a decision)
+
+1. **Auth provider for the dashboard shell.** Authentik/OIDC is the leading candidate based on `coms-dashboard`, but final pick belongs to spec `003-…` (not yet drafted).
+2. **Cron schedule for the producer.** Default proposed: 06:00 UTC daily, no-agent watchdog, silent on `skipped_unchanged` / `disabled_missing_secret`. Confirm cadence.
+3. **Vercel Blob store config.** Confirm whether the existing `coms-dashboard` Blob token covers `games-dashboard/*` paths, or whether a separate `BLOB_READ_WRITE_TOKEN` is required.
+4. **`GAMES_DASHBOARD_DATA_SECRET` provisioning.** The producer is gated on this existing. Confirm it has been provisioned in the producer's runtime environment.

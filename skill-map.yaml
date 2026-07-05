@@ -9,18 +9,44 @@ implementation:
   vercel_project_url: TBD
 
 sdd:
-  local_path: /home/hermes/workspace/games-dashboard-sdd
-  source_of_truth: private
-  public_repo_policy: implementation_only
+  local_path: specs/   # in this public repo (Proposed specs); private SDD workspace deferred
+  source_of_truth: public-for-proposed
+  public_repo_policy: implementation_only_and_proposed_specs
   status: proposed
   specs:
     - id: 001-games-dashboard
-      status: Proposed
-      scope: umbrella MVP — populate after private SDD workspace is created
-  notes: >
-    No specs exist yet. The private SDD workspace has not been provisioned.
-    The next step is to create ~/.hermes/workspace/games-dashboard-sdd
-    and draft spec 001 there, mirroring the coms-dashboard pattern.
+      status: Proposed (refined 2026-07-05; unblocked 2026-07-05)
+      scope: umbrella MVP — /, /played, /news-monitor, eligibility model, drift surfacing
+    - id: 002-games-news-monitor-producer
+      status: Proposed (drafted 2026-07-05)
+      scope: server-side producer that publishes played/latest.json and news-monitor/latest.json to Vercel Blob, layered on top of the existing gaming-news skill
+
+producer:
+  runtime_path: ~/.hermes/profiles/home/skills/gaming-news/scripts/publish_dashboard_snapshots.py
+  upstream_skill: ~/.hermes/profiles/home/skills/gaming-news/
+  upstream_skill_specs:
+    - .specify/specs/002-production-calibration/
+    - .specify/specs/003-scheduler-integration/
+    - .specify/specs/004-source-strategy/
+    - .specify/specs/005-game-news-summary/
+    - .specify/specs/006-game-activity/      # source of truth for eligibility verdicts
+  runtime_storage:
+    target: Vercel Blob
+    paths:
+      - games-dashboard/v1/played/latest.json
+      - games-dashboard/v1/news-monitor/latest.json
+  env_vars:
+    - name: GAMES_DASHBOARD_DATA_SECRET
+      purpose: server-side sync authorisation
+      never: NEXT_PUBLIC_* / value-in-sdd / value-in-repo / value-in-logs / value-in-telegram
+    - name: BLOB_READ_WRITE_TOKEN
+      purpose: Vercel Blob write credential
+      never: NEXT_PUBLIC_* / value-in-sdd / value-in-repo / value-in-logs / value-in-telegram
+  cron:
+    schedule: "0 6 * * *"      # 06:00 UTC daily (matches chess.com precedent)
+    type: no_agent_watchdog
+    silent_when: [skipped_unchanged, disabled_missing_secret]
+    deliver_origin: telegram
 
 skills:
   delivery:
@@ -28,23 +54,24 @@ skills:
     - writing-plans
     - github
   games_sources:
-    - TBD — depends on data sources Danny wants to surface (e.g. Steam, PSN,
-      PlayStation trophies, Nintendo Switch, Backloggd, RAWG, IGDB)
+    - gaming-news   # upstream producer skill in ~/.hermes/profiles/home/skills/gaming-news/
   likely_adjacent:
-    - TBD
+    - chess-com-analysis   # cron / watchdog precedent
+    - vercel-deploy-env-rebuild-and-key-handling
 
 privacy_policy:
   never_commit_to_public_repo:
-    - private SDD/spec files
-    - raw game-library exports or scraping outputs
+    - private SDD/spec files (when content firms up, move to private SDD workspace)
+    - raw Steam / publisher exports or scraping outputs
     - OAuth tokens, client secrets, API keys
     - personal gaming identifiers (Steam IDs, PSN IDs, etc.)
-    - local Hermes runtime paths containing private state
     - Vercel Blob store IDs or tokens
     - screenshot payloads containing private content
+    - GAMES_DASHBOARD_DATA_SECRET value (variable name OK; value never)
   public_repo_allowed:
     - Next.js source code
     - server-side data access abstractions
     - sanitised tests and fictional fixtures
     - env var names without values
     - high-level public architecture notes if needed
+    - Proposed spec files (spec, plan, tasks, data-contracts, acceptance, security-privacy, references, changelog)

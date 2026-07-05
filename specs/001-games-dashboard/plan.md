@@ -14,10 +14,11 @@
 
 This umbrella MVP + the following likely non-final Proposed child specs:
 
-1. `001-games-dashboard` — umbrella MVP with three top-level pages, eligibility computation, and news-monitor consumer behaviour.
-2. (Future) source-separated runtime storage spec.
-3. (Future) common sync boundary spec (deterministic paths, secret auth, validation, freshness).
-4. (Future) source-specific producer specs (one per chosen source).
+1. `001-games-dashboard` — umbrella MVP with three top-level pages.
+2. **`002-games-news-monitor-producer`** — Proposed. Defines the producer side of FR-007 / FR-008 on top of the existing `gaming-news` skill. Mirrors `coms-dashboard`'s `011-whatsapp-source-publisher` pattern.
+3. (Future) auth shell — `003-…`.
+4. (Future) logged-in user shell — `004-…`, `005-…`.
+5. (Future) responsive layout — `006-…`.
 
 ## Phase 1: Reconcile current implementation to the spec
 
@@ -39,8 +40,8 @@ This umbrella MVP + the following likely non-final Proposed child specs:
 2. Define a server-side `NewsMonitorReader` that:
    - reads `games-dashboard/v1/news-monitor/latest.json` (or fixture fallback);
    - validates the snapshot against `NewsMonitorSnapshot` contract;
-   - flags `eligibilityDrift` against the `played` snapshot by `playedGameId` (or by title+source when no link is present).
-3. Eligibility computation is the producer's responsibility — the dashboard does NOT recompute. The dashboard consumes the producer's `verdict` + `reasons` field as already-computed state.
+   - flags `eligibilityDrift` against the `played` snapshot by `playedGameId`.
+3. The producer for both snapshots is **owned by `002-games-news-monitor-producer`**. The dashboard implementation must NOT recompute eligibility — it consumes the precomputed `verdict` + `reasons` from the producer. If a snapshot is missing or malformed, the dashboard degrades gracefully and surfaces a per-source warning.
 4. Source failures must be isolated: one missing/malformed/unavailable source must not block the others.
 
 ## Phase 3: Product pages

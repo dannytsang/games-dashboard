@@ -14,12 +14,13 @@
 
 - [ ] `/played` renders one row per `PlayedGame` from `games-dashboard/v1/played/latest.json`.
 - [ ] Each row shows: title, source/platform label, last-played timestamp (when known), concise context (when available), and an eligibility verdict label.
-- [ ] The eligibility verdict label is one of `Eligible`, `Borderline`, `Not eligible`, `Unknown`, and is computed server-side (not in the browser).
+- [ ] The eligibility verdict label is one of `Eligible`, `Borderline`, `Not eligible`, `Unknown`, and is **produced server-side by spec 002** (not recomputed in the browser).
 - [ ] When the verdict is `Eligible`, the row shows the matching reason(s) from `{recent_activity, recent_launch, manual_opt_in}`.
 - [ ] When the verdict is `Unknown`, the row shows the `unknownReason` value (e.g. `missing_last_played`).
 - [ ] Default thresholds (`playedRecentDays=30`, `launchWindowDays=90`) are honoured when the snapshot does not override them; snapshot-declared thresholds take precedence.
 - [ ] A game with no matching reason still appears on `/played` with verdict `Not eligible` and an empty `reasons` array.
 - [ ] Eligibility reasons are surfaced to the user, not hidden — Danny must be able to tell at a glance *why* a game qualifies.
+- [ ] When `played/latest.json` is missing or malformed, `/played` shows a per-source warning and a clearly labelled "no data" state — never a blank page or a thrown error.
 
 ### FR-008 — `/news-monitor`
 
@@ -28,6 +29,7 @@
 - [ ] The dashboard surfaces an `eligibilityDrift` warning row when a `news-monitor` entry's verdict in the matching `played` row is no longer `eligible`.
 - [ ] The dashboard does NOT auto-add, auto-remove, or auto-remediate any entry. Drift is surfaced read-only.
 - [ ] An entry whose reasons are an empty array is rendered with a visible "no reason recorded" label (data hygiene signal, not an error).
+- [ ] When `news-monitor/latest.json` is missing or malformed, `/news-monitor` shows a per-source warning and a clearly labelled "no data" state — never a blank page.
 
 ### FR-009 — `/` Summary
 

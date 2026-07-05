@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-07-05 — Unblock: producer spec + resolved open questions
+
+- **Drafted `specs/002-games-news-monitor-producer/`** (full set: spec, data-contracts, acceptance, plan, tasks, references, changelog).
+- Producer layers on top of the **existing `gaming-news` skill** — does NOT re-implement eligibility logic. Calls `build_game_catalog(days=N)` and `_determine_news_eligibility`.
+- Resolved the previously-blocking open questions:
+  - News sources → Steam (default), matching `gaming-news` spec 004.
+  - Delivery channel → out of dashboard scope; existing `cron_daily_news.py` + `weekly_digest.py` continue.
+  - Producer location → `~/.hermes/profiles/home/skills/gaming-news/scripts/publish_dashboard_snapshots.py`.
+  - Storage target → Vercel Blob, auth via `GAMES_DASHBOARD_DATA_SECRET`.
+  - Eligibility rule → reuse upstream `_determine_news_eligibility`; FR-003 mapping table in spec 002.
+  - Manual opt-in source-of-truth → `games.yaml` `always_include_for_news` + `tracking_mode: always` (already in place).
+- Umbrella spec (001) now references spec 002 explicitly in § "Relationship to implementation specs" and § "Implementation scope".
+- Renumbered child specs (auth `003-…`, user shell `004-…` / `005-…`, responsive `006-…`) to free `002` for the producer.
+
 ## 2026-07-05 — Spec refinement: played games + news monitor
 
 - Refined umbrella spec 001 to add three explicit top-level surfaces: `/` Summary, `/played`, `/news-monitor`.
