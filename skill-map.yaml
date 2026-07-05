@@ -37,11 +37,20 @@ producer:
       - games-dashboard/v1/news-monitor/latest.json
   env_vars:
     - name: GAMES_DASHBOARD_DATA_SECRET
-      purpose: server-side sync authorisation
+      purpose: server-side sync authorisation (producer write path)
       never: NEXT_PUBLIC_* / value-in-sdd / value-in-repo / value-in-logs / value-in-telegram
     - name: BLOB_READ_WRITE_TOKEN
-      purpose: Vercel Blob write credential
+      purpose: Vercel Blob write credential (producer)
       never: NEXT_PUBLIC_* / value-in-sdd / value-in-repo / value-in-logs / value-in-telegram
+    - name: BLOB_PUBLIC_READ_URL
+      purpose: Vercel Blob public-read base URL (dashboard consumer)
+      never: NEXT_PUBLIC_* / value-in-sdd / value-in-repo / value-in-logs / value-in-telegram
+      notes: >
+        Introduced by the dashboard implementation to read source snapshots
+        via public URL fetch instead of using BLOB_READ_WRITE_TOKEN. Public URL
+        fetch is sufficient for read-only and avoids exposing the write token
+        server-side. When unset, the dashboard falls back to
+        sanitized-examples/*.fictional.json.
   cron:
     schedule: "0 6 * * *"      # 06:00 UTC daily (matches chess.com precedent)
     type: no_agent_watchdog
