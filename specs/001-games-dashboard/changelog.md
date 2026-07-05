@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-07-05 — FR-000 placeholder shipped
+
+- Implemented FR-000 deployable placeholder landing page per the spec.
+- Next.js 14.2.15 App Router + TypeScript; single route `/` with clearly fictional content only.
+- No secrets, no `NEXT_PUBLIC_*` env values, no Vercel Blob, no auth, no source integrations.
+- Build, lint, type-check all green on a fresh clone.
+- Tester verdict: **PASS** (after one fix cycle — `ed8b1d1` committed the missing scaffold files that `73580cd5` had left untracked).
+- Pushed commits: `73580cd5`, `ed8b1d1`.
+
 ## 2026-07-05 — Initial umbrella scaffold
 
 - Created public implementation repo `git@github.com:dannytsang/games-dashboard.git`.

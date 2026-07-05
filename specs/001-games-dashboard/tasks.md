@@ -12,7 +12,7 @@
 - [ ] Decide storage target (Vercel Blob or alternative).
 - [ ] Decide auth provider for production.
 - [ ] Decide dashboard page structure (single landing vs one page per source).
-- [ ] Replace placeholder with skeleton Next.js app + fictional data only.
+- [x] Replace placeholder with skeleton Next.js app + fictional data only. _Done: commit 73580cd5 + fix 8d1d1 → ed8b1d1; placeholder renders at / with no real data; fresh clone installs/builds/lints/type-checks clean._
 - [ ] Create long-lived `preview` branch for Vercel Preview deployments.
 - [ ] Move umbrella spec into the private SDD workspace once it has real product content.
 
