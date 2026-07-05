@@ -1,0 +1,50 @@
+project: games-dashboard
+visibility: private-sdd-public-code
+
+implementation:
+  repo: git@github.com:dannytsang/games-dashboard.git
+  local_path: /home/hermes/workspace/games-dashboard
+  github_visibility: public
+  vercel_project_id: TBD
+  vercel_project_url: TBD
+
+sdd:
+  local_path: /home/hermes/workspace/games-dashboard-sdd
+  source_of_truth: private
+  public_repo_policy: implementation_only
+  status: proposed
+  specs:
+    - id: 001-games-dashboard
+      status: Proposed
+      scope: umbrella MVP — populate after private SDD workspace is created
+  notes: >
+    No specs exist yet. The private SDD workspace has not been provisioned.
+    The next step is to create ~/.hermes/workspace/games-dashboard-sdd
+    and draft spec 001 there, mirroring the coms-dashboard pattern.
+
+skills:
+  delivery:
+    - sdd-profile-delivery-team
+    - writing-plans
+    - github
+  games_sources:
+    - TBD — depends on data sources Danny wants to surface (e.g. Steam, PSN,
+      PlayStation trophies, Nintendo Switch, Backloggd, RAWG, IGDB)
+  likely_adjacent:
+    - TBD
+
+privacy_policy:
+  never_commit_to_public_repo:
+    - private SDD/spec files
+    - raw game-library exports or scraping outputs
+    - OAuth tokens, client secrets, API keys
+    - personal gaming identifiers (Steam IDs, PSN IDs, etc.)
+    - local Hermes runtime paths containing private state
+    - Vercel Blob store IDs or tokens
+    - screenshot payloads containing private content
+  public_repo_allowed:
+    - Next.js source code
+    - server-side data access abstractions
+    - sanitised tests and fictional fixtures
+    - env var names without values
+    - high-level public architecture notes if needed
